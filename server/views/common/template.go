@@ -50,13 +50,17 @@ func getDateDay(layout string) int {
 
 // getTemplateBlog 初始化templateBlog，加载前端公共文件
 func getTemplateBlog(templateName string) *TemplateBlog {
-	t := template.New(templateName)
+	t := template.New(templateName + ".html")
 
 	path := config.AppLocalPath
 	t.Funcs(template.FuncMap{"isODD": isODD, "getNextName": getNextName, "date": getDate, "dateDay": getDateDay})
-
+	homePath := filepath.Join(path, "/viewSrc/template/home.html")
 	// 加载公用部分
 	t, err := t.ParseGlob(filepath.Join(path, "/viewSrc/template/layout/*.html"))
+	if err != nil {
+		log.Println("解析前端html文件报错", err)
+	}
+	t, err = t.ParseFiles(homePath)
 	if err != nil {
 		log.Println("解析前端html文件报错", err)
 	}
@@ -89,12 +93,12 @@ func InitHTMLTemplate(htmlTemplate *HTMLTemplate) {
 			// 根据名称初始化TemplateBlog
 			newValue := getTemplateBlog(strings.ToLower(fieldName))
 			fieldValue.Set(reflect.ValueOf(newValue))
-			log.Println(fmt.Sprintf("%s赋值结果：%s", fieldName, htmlTemplateValue.FieldByName(fieldName)))
+			//log.Println(fmt.Sprintf("%s赋值结果：%s", fieldName, htmlTemplateValue.FieldByName(fieldName)))
 		} else {
 			log.Println(fmt.Sprintf("%s无法赋值", fieldName))
 		}
 	}
-	log.Println("htmlTemplate初始化后结果：", htmlTemplate)
+	//log.Println("htmlTemplate初始化后结果：", htmlTemplate)
 }
 
 func InitHTMLTemplateCtl() {
