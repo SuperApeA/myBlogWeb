@@ -2,8 +2,9 @@ package models
 
 import (
 	"html/template"
-	"myBlogWeb/config"
 	"time"
+
+	"myBlogWeb/config"
 )
 
 type Post struct {
@@ -21,18 +22,19 @@ type Post struct {
 }
 
 type PostMore struct {
-	Pid          int           `json:"pid"`          // 文章ID
-	Title        string        `json:"title"`        // 文章ID
-	Slug         string        `json:"slug"`         // 自定也页面 path
-	Content      template.HTML `json:"content"`      // 文章的html
-	CategoryId   int           `json:"categoryId"`   // 文章的Markdown
-	CategoryName string        `json:"categoryName"` // 分类名
-	UserId       int           `json:"userId"`       // 用户id
-	UserName     string        `json:"userName"`     // 用户名
-	ViewCount    int           `json:"viewCount"`    // 查看次数
-	Type         int           `json:"type"`         // 文章类型 0 普通，1 自定义文章
-	CreateAt     string        `json:"createAt"`
-	UpdateAt     string        `json:"updateAt"`
+	Pid        int           `json:"pid"`        // 文章ID
+	Title      string        `json:"title"`      // 文章ID
+	Slug       string        `json:"slug"`       // 自定也页面 path
+	Content    template.HTML `json:"content"`    // 文章的html
+	CategoryId int           `json:"categoryId"` // 文章的Markdown
+	UserId     int           `json:"userId"`     // 用户id
+	ViewCount  int           `json:"viewCount"`  // 查看次数
+	Type       int           `json:"type"`       // 文章类型 0 普通，1 自定义文章
+	CreateAt   string        `json:"createAt"`
+	UpdateAt   string        `json:"updateAt"`
+
+	CategoryName string `json:"categoryName"` // 分类名
+	UserName     string `json:"userName"`     // 用户名
 }
 
 type PostReq struct {
