@@ -1,24 +1,24 @@
 package views
 
 import (
+	"errors"
 	"log"
 	"net/http"
 
 	"myBlogWeb/config"
 	"myBlogWeb/server/models"
+	"myBlogWeb/server/sql"
 	"myBlogWeb/server/views/common"
 )
 
-// IndexHtmlResponse index界面相应
-func (*HTMLApi) IndexHtmlResponse(w http.ResponseWriter, r *http.Request) {
-	t := common.GetHTMLTemplateCtl().Index
-
-	var categoryList = []models.Category{
-		{
-			Cid:  1,
-			Name: "go",
-		},
+func GetIndexResponseData() (*models.HomeData, error) {
+	// 类别信息
+	categoryList, err := sql.GetAllCategory()
+	if err != nil {
+		return nil, err
 	}
+
+	// 博客信息
 	var posts = []models.PostMore{
 		{
 			Pid:          1,
@@ -41,7 +41,17 @@ func (*HTMLApi) IndexHtmlResponse(w http.ResponseWriter, r *http.Request) {
 		Pages:        []int{1},
 		PageEnd:      true,
 	}
+	return hr, nil
+}
 
+// IndexHtmlResponse index界面相应
+func (*HTMLApi) IndexHtmlResponse(w http.ResponseWriter, r *http.Request) {
+	t := common.GetHTMLTemplateCtl().Index
+	hr, err := GetIndexResponseData()
+	if err != nil {
+		t.WriteError(w, errors.New("系统内部错误，请联系管理员！"))
+		return
+	}
 	if err := t.Execute(w, hr); err != nil {
 		log.Println("index返回前端报错", err)
 	}

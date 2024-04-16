@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"myBlogWeb/server/sql"
 	"net/http"
 
 	"myBlogWeb/server/router"
@@ -14,7 +15,6 @@ type IndexInfo struct {
 }
 
 func main() {
-
 	server := http.Server{
 		//Addr: "127.0.0.1:12345",
 		Addr: "0.0.0.0:12345",
@@ -24,6 +24,8 @@ func main() {
 	views.InitHTMLTemplateCtl()
 	// 设置路由
 	router.InitRouter()
+	// 建立数据库连接
+	sql.InitDB()
 
 	if err := server.ListenAndServe(); err != nil {
 		log.Println(err)

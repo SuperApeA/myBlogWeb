@@ -2,17 +2,19 @@ package config
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v3"
 	"os"
 	"path/filepath"
+
+	"gopkg.in/yaml.v3"
 )
 
 // AppLocalPath 项目部署根目录
 const AppLocalPath = "/home/workspace/myBlog/myBlogWeb"
 
 type Config struct {
-	Viewer Viewer
-	System SystemConfig
+	Viewer Viewer       `yaml:"viewer"`
+	System SystemConfig `yaml:"system"`
+	Sql    SqlConfig    `yaml:"mysql"`
 }
 type Viewer struct {
 	Title       string   `yaml:"Title"`
@@ -36,6 +38,13 @@ type SystemConfig struct {
 	ValineAppid     string `yaml:"ValineAppid"`
 	ValineAppkey    string `yaml:"ValineAppkey"`
 	ValineServerURL string `yaml:"ValineServerURL"`
+}
+
+type SqlConfig struct {
+	Host     string `yaml:"Host"`
+	Port     string `yaml:"Port"`
+	User     string `yaml:"User"`
+	Password string `yaml:"Password"`
 }
 
 var config *Config
@@ -65,6 +74,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	//log.Println(config)
 }
 
 func GetConfig() *Config {

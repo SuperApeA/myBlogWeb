@@ -19,6 +19,9 @@ do
 done
 
 cd "$app_path"; rm -rf myBlog; go build -o myBlog;  ./myBlog &
-echo "myBlog is running!"
 
-
+if [ -f "$app_path/myBlog" ]; then
+    echo "myBlog is running!"
+else
+    echo "myBlog start failed!"
+fi

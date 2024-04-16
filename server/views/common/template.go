@@ -54,9 +54,9 @@ func getTemplateBlog(templateName string) *TemplateBlog {
 
 	path := config.AppLocalPath
 	t.Funcs(template.FuncMap{"isODD": isODD, "getNextName": getNextName, "date": getDate, "dateDay": getDateDay})
-	homePath := filepath.Join(path, "/viewSrc/template/home.html")
+	homePath := filepath.Join(path, "/viewsrc/template/home.html")
 	// 加载公用部分
-	t, err := t.ParseGlob(filepath.Join(path, "/viewSrc/template/layout/*.html"))
+	t, err := t.ParseGlob(filepath.Join(path, "/viewsrc/template/layout/*.html"))
 	if err != nil {
 		log.Println("解析前端html文件报错", err)
 	}
@@ -65,7 +65,7 @@ func getTemplateBlog(templateName string) *TemplateBlog {
 		log.Println("解析前端html文件报错", err)
 	}
 	// 加载对应入参的前端文件
-	templatePath := filepath.Join(path, "/viewSrc/template/"+templateName+".html")
+	templatePath := filepath.Join(path, "/viewsrc/template/"+templateName+".html")
 	t, err = t.ParseFiles(templatePath)
 	if err != nil {
 		log.Println("解析前端html文件报错", err)
@@ -124,8 +124,16 @@ func GetHTMLTemplateCtl() *HTMLTemplate {
 	return htmlTemplate
 }
 
-// Execute templateBlog执行解析
-func (t *TemplateBlog) Execute(wr io.Writer, data any) error {
+// WriteError templateBlog执行解析
+func (t *TemplateBlog) WriteError(wr io.Writer, err error) {
+	if err != nil {
+		// 直接返回错误
+		_, _ = wr.Write([]byte(err.Error()))
+	}
+}
+
+// WriteData templateBlog执行解析
+func (t *TemplateBlog) WriteData(wr io.Writer, data any) error {
 	if err := t.Template.Execute(wr, data); err != nil {
 		log.Println("前端文件加载解析执行报错", err)
 		return err
