@@ -1,6 +1,8 @@
 package sql
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 	"strings"
@@ -16,10 +18,6 @@ func GetAllCategory() ([]models.Category, error) {
 		log.Printf("Query all category data error: %s\n", err)
 		return nil, err
 	}
-	if err := rows.Err(); err != nil {
-		log.Printf("Select all category data error: %s\n", err)
-		return nil, err
-	}
 	var categoryList []models.Category
 	for rows.Next() {
 		var category models.Category
@@ -29,6 +27,9 @@ func GetAllCategory() ([]models.Category, error) {
 			&category.CreateAt,
 			&category.UpdateAt,
 		)
+		if errors.Is(err, sql.ErrNoRows) {
+			return []models.Category{}, nil
+		}
 		if err != nil {
 			log.Printf("Scan category data error: %s\n", err)
 			return nil, err
@@ -52,10 +53,6 @@ func GetCategoryByIds(categoryIds []int) ([]models.Category, error) {
 		log.Printf("Query category data error: %s\n", err)
 		return nil, err
 	}
-	if err := rows.Err(); err != nil {
-		log.Printf("Select category data error: %s\n", err)
-		return nil, err
-	}
 	var categoryList []models.Category
 	for rows.Next() {
 		var category models.Category
@@ -65,6 +62,9 @@ func GetCategoryByIds(categoryIds []int) ([]models.Category, error) {
 			&category.CreateAt,
 			&category.UpdateAt,
 		)
+		if errors.Is(err, sql.ErrNoRows) {
+			return []models.Category{}, nil
+		}
 		if err != nil {
 			log.Printf("Scan category data error: %s\n", err)
 			return nil, err

@@ -48,3 +48,16 @@ func GetRequestJsonParam(r *http.Request) (map[string]interface{}, error) {
 	_ = json.Unmarshal(body.Bytes(), &param)
 	return param, nil
 }
+
+//func GetRequestJsonParam(r *http.Request) (map[string]interface{}, error) {
+//	param := make(map[string]interface{})
+//	body, err := io.ReadAll(r.Body)
+//	if err != nil {
+//		log.Printf("Get request body failed: %v\n", err)
+//		return nil, err
+//	}
+//	// 读取请求体后，确保关闭它
+//	_ = r.Body.Close()
+//	_ = json.Unmarshal(body, &param)
+//	return param, nil
+//}
