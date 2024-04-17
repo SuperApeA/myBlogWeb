@@ -1,9 +1,10 @@
 package models
 
 type User struct {
-	UserID   int    `json:"user_id"`
-	UserName string `json:"user_name"`
+	UserID   int    `json:"UserID"`
+	UserName string `json:"userName"`
 	Password string `json:"password"`
+	Avatar   string `json:"avatar"`
 	CreateAt string `json:"createAt"`
 	UpdateAt string `json:"updateAt"`
 }

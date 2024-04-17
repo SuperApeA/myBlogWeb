@@ -23,12 +23,12 @@ func ConvertPostToPostMore(p []models.Post) ([]models.PostMore, error) {
 		userIds = append(userIds, post.UserId)
 		categoryIds = append(categoryIds, post.CategoryId)
 	}
-	userList, err := sql.GetUserNameByIds(userIds)
+	userList, err := sql.GetUserByIds(userIds)
 	userMap := make(map[int]models.User)
 	for _, user := range userList {
 		userMap[user.UserID] = user
 	}
-	categoryList, err := sql.GetCategoryNameByIds(categoryIds)
+	categoryList, err := sql.GetCategoryByIds(categoryIds)
 	categoryMap := make(map[int]models.Category)
 	for _, category := range categoryList {
 		categoryMap[category.Cid] = category
@@ -86,7 +86,7 @@ func GetOnePagePostMore(pageNumber int) ([]models.PostMore, int, int, error) {
 }
 
 // GetIndexResponseData 获取首页信息
-func GetIndexResponseData(pageNumber int) (*models.HomeData, error) {
+func GetIndexResponseData(pageNumber int) (*models.HomeResponse, error) {
 	// 类别信息
 	categoryList, err := sql.GetAllCategory()
 	if err != nil {
@@ -102,7 +102,7 @@ func GetIndexResponseData(pageNumber int) (*models.HomeData, error) {
 	for i := 0; i < totalPages; i++ {
 		pages = append(pages, i+1)
 	}
-	var hr = &models.HomeData{
+	var hr = &models.HomeResponse{
 		Viewer:       config.GetConfig().Viewer,
 		CategoryList: categoryList,
 		Posts:        postList,
@@ -116,12 +116,12 @@ func GetIndexResponseData(pageNumber int) (*models.HomeData, error) {
 
 // IndexHtmlResponse index界面响应，home页
 func (*HTMLApi) IndexHtmlResponse(w http.ResponseWriter, r *http.Request) {
-	t := common.GetHTMLTemplateCtl().Index
+	indexTemplate := common.GetHTMLTemplateCtl().Index
 
 	// 获取页数
 	err := r.ParseForm()
 	if err != nil {
-		t.WriteError(w, errors.New("系统内部错误，请联系管理员！"))
+		indexTemplate.WriteError(w, errors.New("系统内部错误，请联系管理员！"))
 		return
 	}
 	page := r.Form.Get("page")
@@ -131,14 +131,11 @@ func (*HTMLApi) IndexHtmlResponse(w http.ResponseWriter, r *http.Request) {
 	}
 	hr, err := GetIndexResponseData(pageNumber)
 	if err != nil {
-		t.WriteError(w, errors.New("系统内部错误，请联系管理员！"))
+		indexTemplate.WriteError(w, errors.New("系统内部错误，请联系管理员！"))
 		return
 	}
 
-	if err := t.Execute(w, hr); err != nil {
+	if err := indexTemplate.Execute(w, hr); err != nil {
 		log.Println("index返回前端报错: ", err)
 	}
-	defer func() {
-
-	}()
 }

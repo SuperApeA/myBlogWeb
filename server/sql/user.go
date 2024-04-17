@@ -9,7 +9,7 @@ import (
 	"myBlogWeb/server/utils"
 )
 
-func GetUserNameByIds(userIds []int) ([]models.User, error) {
+func GetUserByIds(userIds []int) ([]models.User, error) {
 	userIds = utils.RemoveDuplicates(userIds)
 	placeholders := make([]string, len(userIds))
 	args := make([]interface{}, len(userIds))

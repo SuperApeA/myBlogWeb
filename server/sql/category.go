@@ -34,7 +34,7 @@ func GetAllCategory() ([]models.Category, error) {
 	return categoryList, nil
 }
 
-func GetCategoryNameByIds(categoryIds []int) ([]models.Category, error) {
+func GetCategoryByIds(categoryIds []int) ([]models.Category, error) {
 	categoryIds = utils.RemoveDuplicates(categoryIds)
 	placeholders := make([]string, len(categoryIds))
 	args := make([]interface{}, len(categoryIds))
