@@ -13,6 +13,10 @@ func GetAllCategory() ([]models.Category, error) {
 	sqlStr := fmt.Sprint("select * from blog_category;")
 	rows, err := DB.Query(sqlStr)
 	if err != nil {
+		log.Printf("Query all category data error: %s\n", err)
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
 		log.Printf("Select all category data error: %s\n", err)
 		return nil, err
 	}
@@ -45,6 +49,10 @@ func GetCategoryByIds(categoryIds []int) ([]models.Category, error) {
 	sqlStr := fmt.Sprintf("select * from blog_category where cid in (%s);", strings.Join(placeholders, ","))
 	rows, err := DB.Query(sqlStr, args...)
 	if err != nil {
+		log.Printf("Query category data error: %s\n", err)
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
 		log.Printf("Select category data error: %s\n", err)
 		return nil, err
 	}

@@ -2,7 +2,7 @@ package models
 
 import "myBlogWeb/config"
 
-type HomeResponse struct {
+type HomeHtmlResponse struct {
 	config.Viewer
 	CategoryList []Category
 	Posts        []PostMore

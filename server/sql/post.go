@@ -12,6 +12,10 @@ func CountAllPost() (int, error) {
 	sqlStr := fmt.Sprint("select count(*) from blog_post;")
 	row := DB.QueryRow(sqlStr)
 	total := 0
+	if err := row.Err(); err != nil {
+		log.Printf("Query all post data error: %s\n", err)
+		return 0, err
+	}
 	if err := row.Scan(&total); err != nil {
 		log.Printf("Count all post data error: %s\n", err)
 		return 0, err
@@ -30,6 +34,10 @@ func CountAllPostByCategoryIDs(categoryIds []int) (int, error) {
 	sqlStr := fmt.Sprintf("select count(*) from blog_post where category_id in (%s);", strings.Join(placeholders, ","))
 	row := DB.QueryRow(sqlStr, args...)
 	total := 0
+	if err := row.Err(); err != nil {
+		log.Printf("Query all post data by category id error: %s\n", err)
+		return 0, err
+	}
 	if err := row.Scan(&total); err != nil {
 		log.Printf("Count all post data by category id error: %s\n", err)
 		return 0, err
@@ -44,6 +52,10 @@ func GetOnePagePost(pageNumber int, pageSize int) ([]models.Post, error) {
 	sqlStr := fmt.Sprintf("select * from blog_post limit %v offset %v;", pageSize, offset)
 	rows, err := DB.Query(sqlStr)
 	if err != nil {
+		log.Printf("Query all post data error: %s\n", err)
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
 		log.Printf("Select all post data error: %s\n", err)
 		return nil, err
 	}
@@ -87,6 +99,10 @@ func GetOnePagePostByCategoryIDs(categoryIds []int, pageNumber int, pageSize int
 	sqlStr := fmt.Sprintf("select * from blog_post where category_id in (%s) limit %v offset %v;", strings.Join(placeholders, ","), pageSize, offset)
 	rows, err := DB.Query(sqlStr, args...)
 	if err != nil {
+		log.Printf("Query all post data error: %s\n", err)
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
 		log.Printf("Select all post data error: %s\n", err)
 		return nil, err
 	}
@@ -120,6 +136,10 @@ func GetAllPost() ([]models.Post, error) {
 	sqlStr := fmt.Sprint("select * from blog_post;")
 	rows, err := DB.Query(sqlStr)
 	if err != nil {
+		log.Println("Query all pos data error")
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
 		log.Println("Select all pos data error")
 		return nil, err
 	}

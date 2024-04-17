@@ -86,7 +86,7 @@ func GetOnePagePostMore(pageNumber int) ([]models.PostMore, int, int, error) {
 }
 
 // GetIndexResponseData 获取首页信息
-func GetIndexResponseData(pageNumber int) (*models.HomeResponse, error) {
+func GetIndexResponseData(pageNumber int) (*models.HomeHtmlResponse, error) {
 	// 类别信息
 	categoryList, err := sql.GetAllCategory()
 	if err != nil {
@@ -102,7 +102,7 @@ func GetIndexResponseData(pageNumber int) (*models.HomeResponse, error) {
 	for i := 0; i < totalPages; i++ {
 		pages = append(pages, i+1)
 	}
-	var hr = &models.HomeResponse{
+	var hr = &models.HomeHtmlResponse{
 		Viewer:       config.GetConfig().Viewer,
 		CategoryList: categoryList,
 		Posts:        postList,

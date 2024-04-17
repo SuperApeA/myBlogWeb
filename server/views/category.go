@@ -39,7 +39,7 @@ func GetOnePagePostMoreByCategoryID(categoryID int, pageNumber int) ([]models.Po
 	return postMoreList, totalPosts, totalPages, nil
 }
 
-func GetCategoryResponseData(categoryID int, pageNumber int) (*models.CategoryResponse, error) {
+func GetCategoryResponseData(categoryID int, pageNumber int) (*models.CategoryHtmlResponse, error) {
 	// 类别信息
 	categoryList, err := sql.GetAllCategory()
 	if err != nil {
@@ -55,7 +55,7 @@ func GetCategoryResponseData(categoryID int, pageNumber int) (*models.CategoryRe
 	for i := 0; i < totalPages; i++ {
 		pages = append(pages, i+1)
 	}
-	var hr = &models.HomeResponse{
+	var hr = &models.HomeHtmlResponse{
 		Viewer:       config.GetConfig().Viewer,
 		CategoryList: categoryList,
 		Posts:        postList,
@@ -64,8 +64,8 @@ func GetCategoryResponseData(categoryID int, pageNumber int) (*models.CategoryRe
 		Pages:        pages,
 		PageEnd:      pageNumber < totalPages,
 	}
-	var categoryResponse = &models.CategoryResponse{
-		HomeResponse: *hr,
+	var categoryResponse = &models.CategoryHtmlResponse{
+		HomeHtmlResponse: *hr,
 	}
 	if len(postList) > 0 {
 		categoryResponse.CategoryName = postList[0].CategoryName
@@ -103,6 +103,6 @@ func (*HTMLApi) CategoryHtmlResponse(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := categoryTemplate.Execute(w, categoryResponse); err != nil {
-		log.Println("index返回前端报错: ", err)
+		log.Println("category返回前端报错: ", err)
 	}
 }

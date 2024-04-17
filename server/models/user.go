@@ -8,3 +8,9 @@ type User struct {
 	CreateAt string `json:"createAt"`
 	UpdateAt string `json:"updateAt"`
 }
+
+type UserInfo struct {
+	UserID   int    `json:"UserID"`
+	UserName string `json:"userName"`
+	Avatar   string `json:"avatar"`
+}

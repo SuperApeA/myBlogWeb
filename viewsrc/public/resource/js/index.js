@@ -69,7 +69,7 @@ function loginLogic() {
           var data = res.data || {};
           localStorage.setItem(TOKEN_KEY, data.token);
           localStorage.setItem(USER_KEY, JSON.stringify(data.userInfo));
-          location.href = "/";
+          location.href = "/index.html";
       },
       error: function (err) {
         console.log("err", err);

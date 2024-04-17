@@ -7,7 +7,7 @@ type Category struct {
 	UpdateAt string `json:"updateAt"`
 }
 
-type CategoryResponse struct {
-	HomeResponse
+type CategoryHtmlResponse struct {
+	HomeHtmlResponse
 	CategoryName string `json:"categoryName"`
 }
