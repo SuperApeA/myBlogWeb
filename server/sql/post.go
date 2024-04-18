@@ -137,13 +137,13 @@ func GetAllPost() ([]models.Post, error) {
 		err := rows.Scan(
 			&post.Pid,
 			&post.Title,
-			&post.Slug,
 			&post.Content,
 			&post.Markdown,
 			&post.CategoryId,
 			&post.UserId,
 			&post.ViewCount,
 			&post.Type,
+			&post.Slug,
 			&post.CreateAt,
 			&post.UpdateAt,
 		)
@@ -157,4 +157,31 @@ func GetAllPost() ([]models.Post, error) {
 		postList = append(postList, post)
 	}
 	return postList, nil
+}
+
+func GetPostByID(postID int) (models.Post, error) {
+	sqlStr := fmt.Sprint("select * from blog_post where pid = ?;")
+	row := DB.QueryRow(sqlStr, postID)
+	var post models.Post
+	err := row.Scan(
+		&post.Pid,
+		&post.Title,
+		&post.Content,
+		&post.Markdown,
+		&post.CategoryId,
+		&post.UserId,
+		&post.ViewCount,
+		&post.Type,
+		&post.Slug,
+		&post.CreateAt,
+		&post.UpdateAt,
+	)
+	if errors.Is(err, sql.ErrNoRows) {
+		return models.Post{}, nil
+	}
+	if err != nil {
+		log.Printf("Scan post data error: %v\n", err)
+		return models.Post{}, err
+	}
+	return post, nil
 }

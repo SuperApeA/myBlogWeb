@@ -53,7 +53,7 @@ type SearchResp struct {
 	Title string `orm:"title" json:"title"`
 }
 
-type PostRes struct {
+type PostHtmlResponse struct {
 	config.Viewer
 	config.SystemConfig
 	Article PostMore

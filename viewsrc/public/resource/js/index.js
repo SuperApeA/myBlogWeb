@@ -202,7 +202,7 @@ function initSearch() {
         for (var i = 0, len = data.length; i < len; i++) {
           var item = data[i];
           searchList.push(
-            "<a href='/p/" + item.pid + ".html'>" + item.title + "<a/>"
+            "<a href='/post/" + item.pid + "'>" + item.title + "<a/>"
           );
           drop.show().html(searchList.join(""));
         }

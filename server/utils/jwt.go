@@ -20,8 +20,8 @@ type Claims struct {
 
 // Award 生成Token
 func Award(uid *int) (string, error) {
-	// 过期时间 默认7天
-	expireTime := time.Now().Add(7 * 24 * time.Hour)
+	// 过期时间 默认1小时
+	expireTime := time.Now().Add(1 * time.Hour)
 	claims := &Claims{
 		Uid: *uid,
 		StandardClaims: jwt.StandardClaims{

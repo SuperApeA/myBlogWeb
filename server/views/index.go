@@ -42,11 +42,7 @@ func ConvertPostToPostMore(p []models.Post) ([]models.PostMore, error) {
 		postMore.Pid = post.Pid
 		postMore.Title = post.Title
 		postMore.Slug = post.Slug
-		content := []rune(post.Content)
-		if len(content) > 100 {
-			content = content[:100]
-		}
-		postMore.Content = template.HTML(content)
+		postMore.Content = template.HTML(post.Content)
 		postMore.CategoryId = post.CategoryId
 		postMore.ViewCount = post.ViewCount
 		postMore.Type = post.Type
@@ -81,6 +77,13 @@ func GetOnePagePostMore(pageNumber int) ([]models.PostMore, int, int, error) {
 	if err != nil {
 		log.Printf("Convert Post to PostMore: %s\n", err)
 		return nil, 0, 0, err
+	}
+	for i, _ := range postMoreList {
+		content := []rune(postMoreList[i].Content)
+		if len(content) > 100 {
+			content = content[:100]
+		}
+		postMoreList[i].Content = template.HTML(content)
 	}
 	return postMoreList, totalPosts, totalPages, nil
 }
