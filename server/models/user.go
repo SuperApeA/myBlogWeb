@@ -1,7 +1,7 @@
 package models
 
 type User struct {
-	UserID   int    `json:"UserID"`
+	UserID   int    `json:"userID"`
 	UserName string `json:"userName"`
 	Password string `json:"password"`
 	Avatar   string `json:"avatar"`
@@ -10,7 +10,7 @@ type User struct {
 }
 
 type UserInfo struct {
-	UserID   int    `json:"UserID"`
+	UserID   int    `json:"userID"`
 	UserName string `json:"userName"`
 	Avatar   string `json:"avatar"`
 }

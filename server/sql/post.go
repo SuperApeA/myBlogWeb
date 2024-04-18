@@ -185,3 +185,27 @@ func GetPostByID(postID int) (models.Post, error) {
 	}
 	return post, nil
 }
+
+func CreatePost(post *models.Post) error {
+	sqlStr := fmt.Sprint("insert into blog_post " +
+		"(title, content, markdown, category_id, user_id, view_count, type, slug, create_at, update_at) " +
+		"values(?,?,?,?,?,?,?,?,?,?);")
+	res, err := DB.Exec(sqlStr,
+		post.Title,
+		post.Content,
+		post.Markdown,
+		post.CategoryId,
+		post.UserId,
+		post.ViewCount,
+		post.Type,
+		post.Slug,
+		post.CreateAt,
+		post.UpdateAt)
+	if err != nil {
+		log.Printf("Insert post error: %v\n", err)
+		return err
+	}
+	pid, _ := res.LastInsertId()
+	post.Pid = int(pid)
+	return nil
+}

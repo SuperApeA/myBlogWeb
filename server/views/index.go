@@ -55,6 +55,16 @@ func ConvertPostToPostMore(p []models.Post) ([]models.PostMore, error) {
 	return postMoreList, nil
 }
 
+func CutPostMoreContext(postMoreList []models.PostMore) {
+	for i, _ := range postMoreList {
+		content := []rune(postMoreList[i].Content)
+		if len(content) > 100 {
+			content = content[:100]
+		}
+		postMoreList[i].Content = template.HTML(content)
+	}
+}
+
 // GetOnePagePostMore 获取博客信息
 func GetOnePagePostMore(pageNumber int) ([]models.PostMore, int, int, error) {
 	// 总条数
@@ -78,13 +88,7 @@ func GetOnePagePostMore(pageNumber int) ([]models.PostMore, int, int, error) {
 		log.Printf("Convert Post to PostMore: %s\n", err)
 		return nil, 0, 0, err
 	}
-	for i, _ := range postMoreList {
-		content := []rune(postMoreList[i].Content)
-		if len(content) > 100 {
-			content = content[:100]
-		}
-		postMoreList[i].Content = template.HTML(content)
-	}
+	CutPostMoreContext(postMoreList)
 	return postMoreList, totalPosts, totalPages, nil
 }
 

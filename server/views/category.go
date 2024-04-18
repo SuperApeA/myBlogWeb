@@ -2,7 +2,6 @@ package views
 
 import (
 	"errors"
-	"html/template"
 	"log"
 	"net/http"
 	"strconv"
@@ -37,13 +36,7 @@ func GetOnePagePostMoreByCategoryID(categoryID int, pageNumber int) ([]models.Po
 		log.Printf("Convert Post to PostMore: %s\n", err)
 		return nil, 0, 0, err
 	}
-	for i, _ := range postMoreList {
-		content := []rune(postMoreList[i].Content)
-		if len(content) > 100 {
-			content = content[:100]
-		}
-		postMoreList[i].Content = template.HTML(content)
-	}
+	CutPostMoreContext(postMoreList)
 	return postMoreList, totalPosts, totalPages, nil
 }
 

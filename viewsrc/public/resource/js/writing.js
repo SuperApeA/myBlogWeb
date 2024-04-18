@@ -159,7 +159,7 @@ $(function () {
   var back = $(".home-btn");
   back.click(function () {
     saveHandler();
-    location.href = ArticleItem.pid ? "/post/" + ArticleItem.pid : "/";
+    location.href = ArticleItem.pid ? "/post/" + ArticleItem.pid : "/index.html";
   });
   if (location.search) back.text("查看");
   // 保存

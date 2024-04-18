@@ -58,3 +58,12 @@ type PostHtmlResponse struct {
 	config.SystemConfig
 	Article PostMore
 }
+
+type PostApiResponse struct {
+	Pid        int    `json:"pid"`
+	Title      string `json:"title"`
+	CategoryId int    `json:"categoryId"`
+	Type       int    `json:"type"`
+	Slug       string `json:"slug"`
+	Markdown   string `json:"markdown"`
+}
