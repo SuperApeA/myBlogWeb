@@ -3,13 +3,15 @@ package api
 import (
 	"errors"
 	"log"
-	"myBlogWeb/server/models"
-	"myBlogWeb/server/sql"
-	"myBlogWeb/server/utils"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	blogerr "myBlogWeb/error"
+	"myBlogWeb/server/models"
+	"myBlogWeb/server/sql"
+	"myBlogWeb/server/views/common"
 )
 
 /*
@@ -23,12 +25,14 @@ type : 0
 */
 func CreatPostResponse(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	token := r.Header.Get("Authorization")
-	_, claims, err := utils.ParseToken(token)
-	if err != nil {
-		_, _ = w.Write(ErrorRes(errors.New("用户未登录或登录已过期！")))
+
+	var uid int
+	var ok bool
+	if uid, ok = common.CheckIsLogin(r); !ok {
+		_, _ = w.Write(ErrorRes(errors.New(blogerr.LoginOut)))
 		return
 	}
+
 	param, err := GetRequestJsonParam(r)
 	if err != nil {
 		log.Printf("Get post param failed, err: %v\n", err)
@@ -50,7 +54,7 @@ func CreatPostResponse(w http.ResponseWriter, r *http.Request) {
 		Markdown:   markdown,
 		CategoryId: cid,
 		Type:       int(type_),
-		UserId:     claims.Uid,
+		UserId:     uid,
 		ViewCount:  0,
 		CreateAt:   time.Now(),
 		UpdateAt:   time.Now(),
@@ -66,12 +70,14 @@ func CreatPostResponse(w http.ResponseWriter, r *http.Request) {
 
 func PutPostResponse(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	token := r.Header.Get("Authorization")
-	_, claims, err := utils.ParseToken(token)
-	if err != nil {
-		_, _ = w.Write(ErrorRes(errors.New("用户未登录或登录已过期！")))
+
+	var uid int
+	var ok bool
+	if uid, ok = common.CheckIsLogin(r); !ok {
+		_, _ = w.Write(ErrorRes(errors.New(blogerr.LoginOut)))
 		return
 	}
+
 	param, err := GetRequestJsonParam(r)
 	if err != nil {
 		log.Printf("Update post param failed, err: %v\n", err)
@@ -94,7 +100,7 @@ func PutPostResponse(w http.ResponseWriter, r *http.Request) {
 		Markdown:   markdown,
 		CategoryId: int(categoryId),
 		Type:       int(type_),
-		UserId:     claims.Uid,
+		UserId:     uid,
 		ViewCount:  0,
 		CreateAt:   time.Now(),
 		UpdateAt:   time.Now(),
@@ -111,12 +117,12 @@ func PutPostResponse(w http.ResponseWriter, r *http.Request) {
 func GetPostResponse(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	token := r.Header.Get("Authorization")
-	_, _, err := utils.ParseToken(token)
-	if err != nil {
-		_, _ = w.Write(ErrorRes(errors.New("用户未登录或登录已过期！")))
+	var ok bool
+	if _, ok = common.CheckIsLogin(r); !ok {
+		_, _ = w.Write(ErrorRes(errors.New(blogerr.LoginOut)))
 		return
 	}
+
 	// 获取postID
 	urlPath := r.URL.Path
 	postIDStr := strings.TrimPrefix(urlPath, "/api/v1/post/")
@@ -133,6 +139,7 @@ func GetPostResponse(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	res := models.PostApiResponse{
+		Uid:        post.UserId,
 		Pid:        post.Pid,
 		Title:      post.Title,
 		CategoryId: post.CategoryId,

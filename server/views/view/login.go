@@ -1,11 +1,12 @@
-package views
+package view
 
 import (
 	"log"
+	"net/http"
+
 	"myBlogWeb/config"
 	"myBlogWeb/server/models"
 	"myBlogWeb/server/views/common"
-	"net/http"
 )
 
 func (*HTMLApi) LoginHtmlResponse(w http.ResponseWriter, r *http.Request) {

@@ -66,4 +66,5 @@ type PostApiResponse struct {
 	Type       int    `json:"type"`
 	Slug       string `json:"slug"`
 	Markdown   string `json:"markdown"`
+	Uid        int    `json:"uid"`
 }

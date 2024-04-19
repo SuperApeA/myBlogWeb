@@ -28,10 +28,10 @@ function initEditor() {
     taskList: true,
     // emoji: true,
     imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-    imageUploadURL: "/api/v1/uploadfile",
-    imageUploadCalback: function (files, cb) {
-      uploadImage(files[0], cb);
-    },
+    imageUploadURL: "/api/v1/post-uploadfile",
+    // imageUploadCalback: function (files, cb) {
+    //   uploadImage(files[0], cb);
+    // },
   });
 }
 function uploadImage(file, cb) {

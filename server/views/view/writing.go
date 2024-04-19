@@ -1,4 +1,4 @@
-package views
+package view
 
 import (
 	"errors"
@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"myBlogWeb/config"
+	blogerr "myBlogWeb/error"
 	"myBlogWeb/server/models"
 	"myBlogWeb/server/sql"
 	"myBlogWeb/server/views/common"
@@ -32,7 +33,11 @@ func (*HTMLApi) WritingHtmlResponse(w http.ResponseWriter, r *http.Request) {
 
 	writingResponse, err := GetWritingResponseData()
 	if err != nil {
-		writingTemplate.WriteError(w, errors.New("系统内部错误，请联系管理员！"))
+		if blogerr.GetClientError()[err.Error()] {
+			writingTemplate.WriteError(w, err)
+		} else {
+			writingTemplate.WriteError(w, errors.New("系统内部错误，请联系管理员！"))
+		}
 		return
 	}
 	if err := writingTemplate.Execute(w, writingResponse); err != nil {

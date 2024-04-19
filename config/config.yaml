@@ -12,7 +12,7 @@ system:
   CdnURL: "https://static.mszlu.com/goblog/es6/md-assets"
   QiniuAccessKey: "替换自己的"
   QiniuSecretKey: "替换自己的"
-# 下面是关于第三方评论功能
+  # 下面是关于第三方评论功能
   Valine: true
   ValineAppid: "替换自己的"
   ValineAppkey: "替换自己的"
