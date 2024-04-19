@@ -1,9 +1,11 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
+	"myBlogWeb/server/models"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -50,6 +52,10 @@ func (*Api) PostUploadFileApiResponse(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var _, _ = w.Write(SuccessRes([]byte("File uploaded successfully")))
+	var res models.FileApiResponse
+	res.Success = 1
+	res.Url = dst.Name()
+	resByte, _ := json.Marshal(res)
+	var _, _ = w.Write(resByte)
 	return
 }
