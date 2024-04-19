@@ -19,6 +19,12 @@ func GetPostDetailResponseData(postID int) (*models.PostHtmlResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+	// 更新下浏览量
+	post.ViewCount = post.ViewCount + 1
+	err = sql.UpdatePost(&post)
+	if err != nil {
+		return nil, err
+	}
 	postMoreList, err := ConvertPostToPostMore([]models.Post{post})
 	if err != nil {
 		log.Printf("Convert Post to PostMore: %s\n", err)

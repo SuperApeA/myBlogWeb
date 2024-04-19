@@ -5,9 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strings"
+
 	"myBlogWeb/server/models"
 	"myBlogWeb/server/utils"
-	"strings"
 )
 
 func CountAllPost() (int, error) {
@@ -207,5 +208,27 @@ func CreatePost(post *models.Post) error {
 	}
 	pid, _ := res.LastInsertId()
 	post.Pid = int(pid)
+	return nil
+}
+
+func UpdatePost(post *models.Post) error {
+	sqlStr := fmt.Sprint("update blog_post " +
+		"set title = ?, content = ?, markdown = ?, category_id = ?, user_id = ?, view_count = ?, type = ?, slug = ?, create_at = ?, update_at = NOW() " +
+		"where pid = ?;")
+	_, err := DB.Exec(sqlStr,
+		post.Title,
+		post.Content,
+		post.Markdown,
+		post.CategoryId,
+		post.UserId,
+		post.ViewCount,
+		post.Type,
+		post.Slug,
+		post.CreateAt,
+		post.Pid)
+	if err != nil {
+		log.Printf("Update post error: %v\n", err)
+		return err
+	}
 	return nil
 }

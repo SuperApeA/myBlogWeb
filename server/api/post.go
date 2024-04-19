@@ -64,6 +64,50 @@ func CreatPostResponse(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(SuccessRes(models.PostApiResponse{Pid: post.Pid}))
 }
 
+func PutPostResponse(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	token := r.Header.Get("Authorization")
+	_, claims, err := utils.ParseToken(token)
+	if err != nil {
+		_, _ = w.Write(ErrorRes(errors.New("用户未登录或登录已过期！")))
+		return
+	}
+	param, err := GetRequestJsonParam(r)
+	if err != nil {
+		log.Printf("Update post param failed, err: %v\n", err)
+		_, _ = w.Write(ErrorRes(errors.New("请求参数非法！")))
+		return
+	}
+	postId := param["pid"].(float64)
+	categoryId := param["categoryId"].(float64)
+	content := param["content"].(string)
+	markdown := param["markdown"].(string)
+	slug := param["slug"].(string)
+	title := param["title"].(string)
+	type_ := param["type"].(float64)
+
+	post := models.Post{
+		Pid:        int(postId),
+		Title:      title,
+		Slug:       slug,
+		Content:    content,
+		Markdown:   markdown,
+		CategoryId: int(categoryId),
+		Type:       int(type_),
+		UserId:     claims.Uid,
+		ViewCount:  0,
+		CreateAt:   time.Now(),
+		UpdateAt:   time.Now(),
+	}
+	err = sql.UpdatePost(&post)
+	if err != nil {
+		log.Printf("Update post failed, err: %v\n", err)
+		_, _ = w.Write(ErrorRes(errors.New("系统出错，发布文章失败，请联系管理员！")))
+		return
+	}
+	_, _ = w.Write(SuccessRes(models.PostApiResponse{Pid: post.Pid}))
+}
+
 func GetPostResponse(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -103,6 +147,8 @@ func (*Api) PostApiResponse(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
 		CreatPostResponse(w, r)
+	case http.MethodPut:
+		PutPostResponse(w, r)
 	case http.MethodGet:
 		GetPostResponse(w, r)
 	}

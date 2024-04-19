@@ -1,0 +1,22 @@
+@font-face {
+    font-family: "iconfont-blog"; /* Project id 4516058 */
+    src: url('//at.alicdn.com/t/c/font_4516058_1v3enrxxjxr.woff2?t=1713534435516') format('woff2'),
+    url('//at.alicdn.com/t/c/font_4516058_1v3enrxxjxr.woff?t=1713534435516') format('woff'),
+    url('//at.alicdn.com/t/c/font_4516058_1v3enrxxjxr.ttf?t=1713534435516') format('truetype');
+}
+
+.iconfont-blog {
+    font-family: "iconfont-blog" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-github:before {
+    content: "\e64c";
+}
+
+.icon-csdn:before {
+    content: "\e600";
+}

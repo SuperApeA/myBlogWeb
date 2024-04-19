@@ -28,7 +28,7 @@ function initEditor() {
     taskList: true,
     // emoji: true,
     imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-    // imageUploadURL: "/api/v1/uploadfile",
+    imageUploadURL: "/api/v1/uploadfile",
     imageUploadCalback: function (files, cb) {
       uploadImage(files[0], cb);
     },
