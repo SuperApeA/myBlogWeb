@@ -9,6 +9,11 @@ var ArticleItem = {};
 function setAjaxToken(xhr) {
   xhr.setRequestHeader("Authorization", localStorage.getItem("AUTH_TOKEN"));
 }
+
+$.ajaxSetup({
+  beforeSend: setAjaxToken
+});
+
 function initEditor() {
   // 取默认标题
   headInput.val(ArticleItem.title);
@@ -18,7 +23,7 @@ function initEditor() {
     height: window.innerHeight - 78,
     syncScrolling: "single",
     editorTheme: "default",
-    path: CNDURL + "/lib/",
+    path: "../lib/",
     placeholder: "",
     appendMarkdown: ArticleItem.markdown,
     codeFold: true,
@@ -29,45 +34,41 @@ function initEditor() {
     // emoji: true,
     imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
     imageUploadURL: "/api/v1/post-uploadfile",
+    token: localStorage.getItem("AUTH_TOKEN"),
     // imageUploadCalback: function (files, cb) {
     //   uploadImage(files[0], cb);
     // },
   });
 }
 function uploadImage(file, cb) {
-  const config = {
-    useCdnDomain: true,
-    region: qiniu.region.z1
-  };
-  const putExtra = {
-  };
-  // 异步获取临时密钥
-  $.ajax({
-    url: "/api/v1/qiniu/token",
-    type: "GET",
-    contentType: "application/json",
-    success: function (res) {
-      if (res.code !== 200) return alert(res.error);
-      const token = res.data;
-      const observable = qiniu.upload(file, "goblog/upload/"+Date.now() + "_" + file.name, token, putExtra, config)
-      const observer = {
-        next(res){
-          // ...
-        },
-        error(err){
-          // ...
-        },
-        complete(res){
-          console.log(res)
-          cb("https://static.mszlu.com/" + res.key)
-        }
-      }
-      const subscription = observable.subscribe(observer) // 上传开始
+  // 创建一个新的 FormData 对象
+  var formData = new FormData();
 
+  // 将文件添加到 FormData 对象中
+  formData.append('editormd-image-file', file);
+
+  // 使用 $.ajax 发送 POST 请求
+  $.ajax({
+    url: "/api/v1/post-uploadfile", // 你的上传接口地址
+    type: "POST",
+    data: formData,
+    // 必须设置正确的 Content-Type，因为 jQuery 会尝试设置它，但我们需要它保持为 multipart/form-data
+    processData: false, // 告诉 jQuery 不要处理发送的数据
+    contentType: false, // 告诉 jQuery 不要设置 Content-Type 请求头
+    success: function(response) {
+      // 假设 response 是一个包含 data.url 的 JSON 对象
+      var imageUrl = response.data.url; // 直接获取 URL
+      var dialog = MdEditor.imageDialog(); // 获取 image-dialog 的 DOM 元素
+        dialog.find('[data-url]').val("123"); // 更新 URL 字段
+      // 请求成功时调用回调函数，并传入响应数据
+      cb(null, response);
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      // 请求失败时调用回调函数，并传入错误信息
+      cb(errorThrown);
     },
     beforeSend: setAjaxToken,
   });
-
 }
 
 

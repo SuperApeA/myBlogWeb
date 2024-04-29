@@ -150,6 +150,7 @@
         imageUploadURL       : "",
         crossDomainUpload    : false,
         uploadCallbackURL    : "",
+        token                : "",
         
         toc                  : true,           // Table of contents
         tocm                 : false,           // Using [TOCM], auto create ToC dropdown menu

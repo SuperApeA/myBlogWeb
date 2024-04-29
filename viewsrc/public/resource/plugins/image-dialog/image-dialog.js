@@ -13,9 +13,9 @@
 
     var factory = function (exports) {
 
-		var pluginName   = "image-dialog";
+        var pluginName   = "image-dialog";
 
-		exports.fn.imageDialog = function() {
+        exports.fn.imageDialog = function() {
 
             var _this       = this;
             var cm          = this.cm;
@@ -27,9 +27,9 @@
             var imageLang   = lang.dialog.image;
             var classPrefix = this.classPrefix;
             var iframeName  = classPrefix + "image-iframe";
-			var dialogName  = classPrefix + pluginName, dialog;
+            var dialogName  = classPrefix + pluginName, dialog;
 
-			cm.focus();
+            cm.focus();
 
             var loading = function(show) {
                 var _loading = dialog.find("." + classPrefix + "dialog-mask");
@@ -46,36 +46,27 @@
                     action += "&callback=" + settings.uploadCallbackURL + "&dialog_id=editormd-image-dialog-" + guid;
                 }
 
-                var dialogContent = ( (settings.imageUpload) ? "<form action=\"" + action +"\" target=\"" + iframeName + "\" method=\"post\" enctype=\"multipart/form-data\" class=\"" + classPrefix + "form\">" : "<div class=\"" + classPrefix + "form\">" ) +
-                                        ( (settings.imageUpload) ? "<iframe name=\"" + iframeName + "\" id=\"" + iframeName + "\" guid=\"" + guid + "\"></iframe>" : "" ) +
-                                        "<label>" + imageLang.url + "</label>" +
-                                        "<input type=\"text\" data-url />" + (function(){
-                                            var fileInput = (function(){
-                                                window._imageUploadCalback = function() {
-                                                    // 获取文件
-                                                   var files = $('#upload-file-input').get(0).files
-                                                    settings.imageUploadCalback(files, function(url) {
-                                                        $('.editormd-dialog-mask').hide()
-                                                        if(url) $("input[data-url]").val(url)
-                                                    })
-                                                }
-                                                var _file = "<input type=\"file\" name=\"" + classPrefix + "image-file\" accept=\"image/*\" />" 
-                                                if (typeof settings.imageUploadCalback == 'function') {
-                                                    return _file + "<input disabled=\"disabled\" type=\"submit\" value=\"" + imageLang.uploadButton + "\" />" + "<div class=\"uploadfile-box\"><input id=\"upload-file-input\" onchange=\"_imageUploadCalback()\" type=\"file\" name=\"" + classPrefix + "image-file\" accept=\"image/*\" /></div>"
-                                                }
-                                                return _file + "<input type=\"submit\" value=\"" + imageLang.uploadButton + "\" />";
-                                            })();
-                                            return (settings.imageUpload) ? "<div class=\"" + classPrefix + "file-input\">" + fileInput +
-                                                                            "</div>" : "";
-                                        })() +
-                                        "<br/>" +
-                                        "<label>" + imageLang.alt + "</label>" +
-                                        "<input type=\"text\" value=\"" + selection + "\" data-alt />" +
-                                        "<br/>" +
-                                        "<label>" + imageLang.link + "</label>" +
-                                        "<input type=\"text\" value=\"http://\" data-link />" +
-                                        "<br/>" +
-                                    ( (settings.imageUpload) ? "</form>" : "</div>");
+                var dialogContent =
+                    // ( (settings.imageUpload) ? "<form action=\"" + action +"\" target=\"" + iframeName + "\" method=\"post\" enctype=\"multipart/form-data\" class=\"" + classPrefix + "form\">" : "<div class=\"" + classPrefix + "form\">" ) +
+                    // ( (settings.imageUpload) ? "<iframe name=\"" + iframeName + "\" id=\"" + iframeName + "\" guid=\"" + guid + "\"></iframe>" : "" ) +
+                    "<form target=\"" + iframeName + "\" class=\"" + classPrefix + "form\">" +
+                    "<iframe name=\"" + iframeName + "\" id=\"" + iframeName + "\" guid=\"" + guid + "\"></iframe>" +
+                    "<label>" + imageLang.url + "</label>" +
+                    "<input type=\"text\" data-url />" + (function(){
+                        return (settings.imageUpload) ? "<div class=\"" + classPrefix + "file-input\">" +
+                            "<input type=\"file\" name=\"" + classPrefix + "image-file\" accept=\"image/*\" />" +
+                            "<input type=\"submit\" value=\"" + imageLang.uploadButton + "\" />" +
+                            "</div>" : "";
+                    })() +
+                    "<br/>" +
+                    "<label>" + imageLang.alt + "</label>" +
+                    "<input type=\"text\" value=\"" + selection + "\" data-alt />" +
+                    "<br/>" +
+                    "<label>" + imageLang.link + "</label>" +
+                    "<input type=\"text\" value=\"http://\" data-link />" +
+                    "<br/>" +
+                    // ( (settings.imageUpload) ? "</form>" : "</div>");
+                    "</form>";
 
                 //var imageFooterHTML = "<button class=\"" + classPrefix + "btn " + classPrefix + "image-manager-btn\" style=\"float:left;\">" + imageLang.managerButton + "</button>";
 
@@ -104,7 +95,7 @@
                                 return false;
                             }
 
-							var altAttr = (alt !== "") ? " \"" + alt + "\"" : "";
+                            var altAttr = (alt !== "") ? " \"" + alt + "\"" : "";
 
                             if (link === "" || link === "http://")
                             {
@@ -132,7 +123,7 @@
 
                             //删除对话框
                             this.remove();
-                            
+
                             return false;
                         }]
                     }
@@ -140,29 +131,29 @@
 
                 dialog.attr("id", classPrefix + "image-dialog-" + guid);
 
-				if (!settings.imageUpload) {
+                if (!settings.imageUpload) {
                     return ;
                 }
 
-				var fileInput  = dialog.find("[name=\"" + classPrefix + "image-file\"]");
+                var fileInput  = dialog.find("[name=\"" + classPrefix + "image-file\"]");
 
-				fileInput.bind("change", function() {
-					var fileName  = fileInput.val();
-					var isImage   = new RegExp("(\\.(" + settings.imageFormats.join("|") + "))$", "i"); // /(\.(webp|jpg|jpeg|gif|bmp|png))$/
+                fileInput.bind("change", function() {
+                    var fileName  = fileInput.val();
+                    var isImage   = new RegExp("(\\.(" + settings.imageFormats.join("|") + "))$", "i"); // /(\.(webp|jpg|jpeg|gif|bmp|png))$/
 
-					if (fileName === "")
-					{
-						// alert(imageLang.uploadFileEmpty);
+                    if (fileName === "")
+                    {
+                        alert(imageLang.uploadFileEmpty);
 
                         return false;
-					}
+                    }
 
                     if (!isImage.test(fileName))
-					{
-						alert(imageLang.formatNotAllowed + settings.imageFormats.join(", "));
+                    {
+                        alert(imageLang.formatNotAllowed + settings.imageFormats.join(", "));
 
                         return false;
-					}
+                    }
 
                     loading(true);
 
@@ -172,69 +163,60 @@
 
                         uploadIframe.onload = function() {
 
-                            loading(false);
-
-                            var body = (uploadIframe.contentWindow ? uploadIframe.contentWindow : uploadIframe.contentDocument).document.body;
-                            var json = (body.innerText) ? body.innerText : ( (body.textContent) ? body.textContent : null);
-
-                            json = (typeof JSON.parse !== "undefined") ? JSON.parse(json) : eval("(" + json + ")");
-
-                            if(!settings.crossDomainUpload)
-                            {
-                              if (json.success === 1)
-                              {
-                                  dialog.find("[data-url]").val(json.url);
-                              }
-                              else
-                              {
-                                  alert(json.message);
-                              }
+                            var xhr = new XMLHttpRequest()
+                            xhr.open('post', settings.imageUploadURL)
+                            xhr.setRequestHeader('Authorization', settings.token)  //添加请求头
+                            xhr.onload = function () {
+                                // 后端响应数据将对应地址存入图片地址这个input中
+                                dialog.find('[data-url]').val(JSON.parse(xhr.responseText).url)
+                                loading(false)
                             }
+                            var data = new FormData(document.querySelector('form'))
+                            xhr.send(data)
 
-                            return false;
                         };
                     };
 
                     dialog.find("[type=\"submit\"]").bind("click", submitHandler).trigger("click");
-				});
+                });
             }
 
-			dialog = editor.find("." + dialogName);
-			dialog.find("[type=\"text\"]").val("");
-			dialog.find("[type=\"file\"]").val("");
-			dialog.find("[data-link]").val("http://");
+            dialog = editor.find("." + dialogName);
+            dialog.find("[type=\"text\"]").val("");
+            dialog.find("[type=\"file\"]").val("");
+            dialog.find("[data-link]").val("http://");
 
-			this.dialogShowMask(dialog);
-			this.dialogLockScreen();
-			dialog.show();
+            this.dialogShowMask(dialog);
+            this.dialogLockScreen();
+            dialog.show();
 
-		};
+        };
 
-	};
+    };
 
-	// CommonJS/Node.js
-	if (typeof require === "function" && typeof exports === "object" && typeof module === "object")
+    // CommonJS/Node.js
+    if (typeof require === "function" && typeof exports === "object" && typeof module === "object")
     {
         module.exports = factory;
     }
-	else if (typeof define === "function")  // AMD/CMD/Sea.js
+    else if (typeof define === "function")  // AMD/CMD/Sea.js
     {
-		if (define.amd) { // for Require.js
+        if (define.amd) { // for Require.js
 
-			define(["editormd"], function(editormd) {
+            define(["editormd"], function(editormd) {
                 factory(editormd);
             });
 
-		} else { // for Sea.js
-			define(function(require) {
+        } else { // for Sea.js
+            define(function(require) {
                 var editormd = require("./../../editormd");
                 factory(editormd);
             });
-		}
-	}
-	else
-	{
+        }
+    }
+    else
+    {
         factory(window.editormd);
-	}
+    }
 
 })();

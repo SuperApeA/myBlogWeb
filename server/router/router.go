@@ -11,6 +11,13 @@ import (
 // InitRouter 设置路由
 func InitRouter() {
 	http.Handle("/resource/", http.StripPrefix("/resource/", http.FileServer(http.Dir(config.AppLocalPath+"/viewsrc/public/resource"))))
+	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir(config.AppLocalPath+"/viewsrc/public/resource/css"))))
+	http.Handle("/fonts/", http.StripPrefix("/fonts/", http.FileServer(http.Dir(config.AppLocalPath+"/viewsrc/public/resource/fonts"))))
+	http.Handle("/images/", http.StripPrefix("/lib/", http.FileServer(http.Dir(config.AppLocalPath+"/viewsrc/public/resource/images"))))
+	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir(config.AppLocalPath+"/viewsrc/public/resource/js"))))
+	http.Handle("/lib/", http.StripPrefix("/lib/", http.FileServer(http.Dir(config.AppLocalPath+"/viewsrc/public/resource/lib"))))
+	http.Handle("/plugins/", http.StripPrefix("/plugins/", http.FileServer(http.Dir(config.AppLocalPath+"/viewsrc/public/resource/plugins"))))
+	http.Handle("/markdown/image/", http.StripPrefix("/markdown/image/", http.FileServer(http.Dir(config.AppLocalPath+"/viewsrc/markdown/image"))))
 
 	http.HandleFunc("/index.html", view.HTML.IndexHtmlResponse)
 	http.HandleFunc("/category/", view.HTML.CategoryHtmlResponse)
