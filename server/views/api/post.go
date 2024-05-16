@@ -71,9 +71,8 @@ func CreatPostResponse(w http.ResponseWriter, r *http.Request) {
 func PutPostResponse(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var uid int
 	var ok bool
-	if uid, ok = common.CheckIsLogin(r); !ok {
+	if _, ok = common.CheckIsLogin(r); !ok {
 		_, _ = w.Write(ErrorRes(errors.New(blogerr.LoginOut)))
 		return
 	}
@@ -92,19 +91,19 @@ func PutPostResponse(w http.ResponseWriter, r *http.Request) {
 	title := param["title"].(string)
 	type_ := param["type"].(float64)
 
-	post := models.Post{
-		Pid:        int(postId),
-		Title:      title,
-		Slug:       slug,
-		Content:    content,
-		Markdown:   markdown,
-		CategoryId: int(categoryId),
-		Type:       int(type_),
-		UserId:     uid,
-		ViewCount:  0,
-		CreateAt:   time.Now(),
-		UpdateAt:   time.Now(),
+	post, err := sql.GetPostByID(int(postId))
+	if err != nil {
+		log.Printf("Get post by id  failed, err: %v\n", err)
+		_, _ = w.Write(ErrorRes(errors.New("系统出错，发布文章失败，请联系管理员！")))
+		return
 	}
+	post.Title = title
+	post.Slug = slug
+	post.Content = content
+	post.Markdown = markdown
+	post.CategoryId = int(categoryId)
+	post.Type = int(type_)
+	post.UpdateAt = time.Now()
 	err = sql.UpdatePost(&post)
 	if err != nil {
 		log.Printf("Update post failed, err: %v\n", err)

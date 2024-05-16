@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	DefaultTImeLayout = "2006:01:02 15:04:05"
+	DefaultTImeLayout = "2006-01-02 15:04:05"
 	Md5ExtraStr       = "AajBlog"
 )
 

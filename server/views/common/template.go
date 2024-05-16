@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"myBlogWeb/config"
+	"myBlogWeb/server/utils"
 )
 
 var htmlTemplate *HTMLTemplate
@@ -44,8 +45,8 @@ func getDate(layout string) string {
 	return time.Now().Format(layout)
 }
 
-func getDateDay(layout string) int {
-	return time.Now().Day()
+func getDateDay(data time.Time) string {
+	return utils.FormatTime(data, "")
 }
 
 // getTemplateBlog 初始化templateBlog，加载前端公共文件
