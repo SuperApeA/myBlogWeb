@@ -160,3 +160,28 @@ func (*Api) PostApiResponse(w http.ResponseWriter, r *http.Request) {
 	}
 	return
 }
+
+func (*Api) PostSearchApiResponse(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	err := r.ParseForm()
+	if err != nil {
+		_, _ = w.Write(ErrorRes(errors.New("系统内部错误，请联系管理员！")))
+		return
+	}
+	searchKey := r.Form.Get("val")
+	var res []models.SearchResp
+	posts, err := sql.GetPostByCondition(searchKey)
+	if err != nil {
+		log.Printf("Get post failed, err: %v\n", err)
+		_, _ = w.Write(ErrorRes(errors.New("系统出错，查询文章失败，请联系管理员！")))
+		return
+	}
+	for _, post := range posts {
+		res = append(res, models.SearchResp{
+			Pid:   post.Pid,
+			Title: post.Title,
+		})
+	}
+	_, _ = w.Write(SuccessRes(res))
+}

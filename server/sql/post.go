@@ -179,7 +179,7 @@ func GetAllPost() ([]models.Post, error) {
 	sqlStr := fmt.Sprint("select * from blog_post;")
 	rows, err := DB.Query(sqlStr)
 	if err != nil {
-		log.Println("Query all pos data error")
+		log.Println("Query all post data error")
 		return nil, err
 	}
 	var postList []models.Post
@@ -281,4 +281,39 @@ func UpdatePost(post *models.Post) error {
 		return err
 	}
 	return nil
+}
+
+func GetPostByCondition(condition string) ([]models.Post, error) {
+	sqlStr := fmt.Sprint("select * from blog_post where title like ?;")
+	rows, err := DB.Query(sqlStr, "%"+condition+"%")
+	if err != nil {
+		log.Println("Query all post data error")
+		return nil, err
+	}
+	var postList []models.Post
+	for rows.Next() {
+		var post models.Post
+		err := rows.Scan(
+			&post.Pid,
+			&post.Title,
+			&post.Content,
+			&post.Markdown,
+			&post.CategoryId,
+			&post.UserId,
+			&post.ViewCount,
+			&post.Type,
+			&post.Slug,
+			&post.CreateAt,
+			&post.UpdateAt,
+		)
+		if errors.Is(err, sql.ErrNoRows) {
+			return []models.Post{}, nil
+		}
+		if err != nil {
+			log.Println("Scan post data error")
+			return nil, err
+		}
+		postList = append(postList, post)
+	}
+	return postList, nil
 }

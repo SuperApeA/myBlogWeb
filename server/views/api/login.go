@@ -41,6 +41,6 @@ func (*Api) LoginApiResponse(w http.ResponseWriter, r *http.Request) {
 	userInfo.Avatar = user.Avatar
 	res.Token = token
 	res.UserInfo = userInfo
-	var _, _ = w.Write(SuccessRes(res))
+	_, _ = w.Write(SuccessRes(res))
 	return
 }

@@ -30,6 +30,7 @@ func InitRouter() {
 	http.HandleFunc("/api/v1/login", api.API.LoginApiResponse)
 	http.HandleFunc("/api/v1/post", api.API.PostApiResponse)
 	http.HandleFunc("/api/v1/post/", api.API.PostApiResponse)
+	http.HandleFunc("/api/v1/post/search", api.API.PostSearchApiResponse)
 	http.HandleFunc("/api/v1/post-uploadfile", api.API.PostUploadFileApiResponse)
 
 }
