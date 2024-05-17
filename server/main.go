@@ -2,10 +2,10 @@ package main
 
 import (
 	"log"
-	"myBlogWeb/server/sql"
 	"net/http"
 
 	"myBlogWeb/server/router"
+	"myBlogWeb/server/sql"
 	views "myBlogWeb/server/views/common"
 )
 
