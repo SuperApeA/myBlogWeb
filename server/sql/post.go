@@ -22,6 +22,17 @@ func CountAllPost() (int, error) {
 	return total, nil
 }
 
+func CountAllPostBySlug(slug string) (int, error) {
+	sqlStr := fmt.Sprint("select count(*) from blog_post where slug = ?;")
+	row := DB.QueryRow(sqlStr, slug)
+	total := 0
+	if err := row.Scan(&total); err != nil {
+		log.Printf("Count all post data error: %s\n", err)
+		return 0, err
+	}
+	return total, nil
+}
+
 func CountAllPostByCategoryIDs(categoryIds []int) (int, error) {
 	categoryIds = utils.RemoveDuplicates(categoryIds)
 	placeholders := make([]string, len(categoryIds))
@@ -46,6 +57,45 @@ func GetOnePagePost(pageNumber int, pageSize int) ([]models.Post, error) {
 	offset := (pageNumber - 1) * pageSize
 	sqlStr := fmt.Sprintf("select * from blog_post limit %v offset %v;", pageSize, offset)
 	rows, err := DB.Query(sqlStr)
+	if err != nil {
+		log.Printf("Query all post data error: %s\n", err)
+		return nil, err
+	}
+	var postList []models.Post
+	for rows.Next() {
+		var post models.Post
+		// Scan读取的列位置需要和变量名保持一致
+		err := rows.Scan(
+			&post.Pid,
+			&post.Title,
+			&post.Content,
+			&post.Markdown,
+			&post.CategoryId,
+			&post.UserId,
+			&post.ViewCount,
+			&post.Type,
+			&post.Slug,
+			&post.CreateAt,
+			&post.UpdateAt,
+		)
+		if errors.Is(err, sql.ErrNoRows) {
+			return []models.Post{}, nil
+		}
+		if err != nil {
+			log.Printf("Scan post data error: %s\n", err)
+			return nil, err
+		}
+		postList = append(postList, post)
+	}
+	return postList, nil
+}
+
+// GetOnePagePostBySlug
+func GetOnePagePostBySlug(pageNumber int, pageSize int, slug string) ([]models.Post, error) {
+	// 计算 OFFSET 值，pageNumber从1开始算
+	offset := (pageNumber - 1) * pageSize
+	sqlStr := fmt.Sprintf("select * from blog_post where slug = ? limit %v offset %v;", pageSize, offset)
+	rows, err := DB.Query(sqlStr, slug)
 	if err != nil {
 		log.Printf("Query all post data error: %s\n", err)
 		return nil, err

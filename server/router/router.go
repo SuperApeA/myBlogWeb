@@ -25,6 +25,7 @@ func InitRouter() {
 	http.HandleFunc("/login", view.HTML.LoginHtmlResponse)
 	http.HandleFunc("/writing", view.HTML.WritingHtmlResponse)
 	http.HandleFunc("/pigeonhole", view.HTML.PigeonholeHtmlResponse)
+	http.HandleFunc("/golang", view.HTML.GolangHtmlResponse)
 
 	http.HandleFunc("/api/v1/login", api.API.LoginApiResponse)
 	http.HandleFunc("/api/v1/post", api.API.PostApiResponse)

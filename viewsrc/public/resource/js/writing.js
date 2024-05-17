@@ -187,6 +187,7 @@ $(function () {
     $(".publish-tip").text("");
   });
   // 选择类型
+  ArticleItem.type = Number(0);
   $(".type-box").on("click", "li", function (event) {
     var target = $(event.target);
     target.addClass("active").siblings().removeClass("active");
